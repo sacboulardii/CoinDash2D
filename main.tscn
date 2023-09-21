@@ -1,0 +1,64 @@
+[gd_scene load_steps=12 format=3 uid="uid://6f4foil5nv3f"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_r125r"]
+[ext_resource type="PackedScene" uid="uid://cqwesxv68omht" path="res://player.tscn" id="1_v4swo"]
+[ext_resource type="Texture2D" uid="uid://b5nky0moupr7l" path="res://assets/grass.png" id="2_tfav2"]
+[ext_resource type="PackedScene" uid="uid://de1wuhyt0snhp" path="res://coin.tscn" id="2_xha1r"]
+[ext_resource type="PackedScene" uid="uid://c0chlg65nsog1" path="res://powerup.tscn" id="3_iu8ki"]
+[ext_resource type="PackedScene" uid="uid://dwc8tox0e61bl" path="res://hud.tscn" id="5_mwasg"]
+[ext_resource type="AudioStream" uid="uid://d2fylf8gj07x8" path="res://assets/audio/Coin.wav" id="6_2cmvu"]
+[ext_resource type="AudioStream" uid="uid://b55g1sm0bei32" path="res://assets/audio/Level.wav" id="7_ygwij"]
+[ext_resource type="AudioStream" uid="uid://ccapk5syfuhf3" path="res://assets/audio/EndSound.wav" id="8_t1o2s"]
+[ext_resource type="AudioStream" uid="uid://b875o2f3l0du1" path="res://assets/audio/Powerup.wav" id="9_1n54e"]
+[ext_resource type="PackedScene" uid="uid://cghkdm5862v8r" path="res://cactus.tscn" id="11_xjig0"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_r125r")
+coin_scene = ExtResource("2_xha1r")
+powerup_scene = ExtResource("3_iu8ki")
+
+[node name="Background" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_tfav2")
+stretch_mode = 1
+
+[node name="Player" parent="." instance=ExtResource("1_v4swo")]
+
+[node name="GameTimer" type="Timer" parent="."]
+
+[node name="HUD" parent="." instance=ExtResource("5_mwasg")]
+
+[node name="CoinSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_2cmvu")
+
+[node name="LevelSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_ygwij")
+
+[node name="EndSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_t1o2s")
+
+[node name="PowerupTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="PowerupSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_1n54e")
+
+[node name="Cactus" parent="." instance=ExtResource("11_xjig0")]
+position = Vector2(343, 485)
+
+[node name="Cactus2" parent="." instance=ExtResource("11_xjig0")]
+position = Vector2(128, 271)
+
+[node name="CoinTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="hurt" from="Player" to="." method="_on_player_hurt"]
+[connection signal="pickup" from="Player" to="." method="_on_player_pickup"]
+[connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]
+[connection signal="start_game" from="HUD" to="." method="_on_hud_start_game"]
+[connection signal="timeout" from="PowerupTimer" to="." method="_on_powerup_timer_timeout"]
